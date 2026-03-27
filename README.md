@@ -99,8 +99,4 @@ This template follows OWASP recommendations:
 - All inputs are validated via `validationSchemas.js` using Zod.
 - Sensitive routes are protected by rate limiters to prevent DoS/Brute-force.
 
-## 🤝 Contributing
-Contributions are welcome! Please feel free to submit a Pull Request.
 
-## 📄 License
-This project is licensed under the MIT License.
