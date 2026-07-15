@@ -56,7 +56,7 @@ router.get('/getAllPendingorganizors', protect, authorize('ADMIN'), auditLog('Ge
 //donor management
 //========================
 router.get('/getDonor/:id', protect, authorize('ADMIN'), auditLog('Access donor'), getDonor);
-router.put('/updateDonor/:id', protect, authorize('ADMIN'), auditLog('Update donor'), updateDonor);
+router.put('/updateDonor/:id', protect, authorize('ADMIN'), upload.single('image'), processImage, uploadErrorHandler, auditLog('Update donor'), updateDonor);
 router.delete('/deleteDonor/:id', protect, authorize('ADMIN'), auditLog('Delete donor'), deleteDonor);
 
 
