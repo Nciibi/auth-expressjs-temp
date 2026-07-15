@@ -76,10 +76,14 @@ const updateOrganizor = asyncHandler(async (req, res) => {
 
 const deleteOrganizor = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const organizer = await Organizer.findByIdAndDelete(id);
+    const organizer = await Organizer.findById(id);
     if (!organizer) {
         throw new AppError('Organizer not found', 404, 4);
     }
+    if (organizer.photo) {
+        await cleanupImage(organizer.photo);
+    }
+    await Organizer.findByIdAndDelete(id);
     return res.status(200).json({
         success: true,
         message: 'Organizer deleted successfully',
