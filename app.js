@@ -16,6 +16,7 @@ const authRoutes = require('./routes/authRoutes');
 const qrAuthRoutes = require('./routes/qrAuth.routes');
 const user = require('./routes/userRoutes');
 const refreshRoutes = require('./routes/refreshRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 
@@ -54,6 +55,7 @@ app.use('/auth', authRoutes);
 app.use('/auth/qr', qrAuthRoutes);
 app.use('/user', user);
 app.use('/refresh', refreshRoutes);
+app.use('/admin', adminRoutes);
 
 // ------------------------------------------------------------------
 // HEALTH CHECK

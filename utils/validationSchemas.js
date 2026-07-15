@@ -21,7 +21,7 @@ const registerSchema = z.object({
 const loginSchema = z.object({
     email: z.string().trim().email('Invalid email address format'),
     password: z.string().min(1, 'Password is required'),
-    role: z.string()
+    role: z.string().optional()
 });
 
 // Password Reset Schema
