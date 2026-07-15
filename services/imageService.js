@@ -1,11 +1,11 @@
 const path = require('path');
 const fs = require('fs/promises');
-const { existsSync } = require('fs');
 const crypto = require('crypto');
 const sharp = require('sharp');
 const { v4: uuidv4 } = require('uuid');
 const { fileTypeFromBuffer } = require('file-type');
 const { getRedisClient } = require('../config/redis');
+const { cleanupImage } = require('../utils/imageCleanup');
 const storage = require('./storage/index');
 
 const REDIS_HASH_PREFIX = 'img_hash:';
@@ -162,7 +162,6 @@ const processImage = async (buffer, options = {}) => {
             const cached = JSON.parse(existing);
             // If we also have an old image to clean up, do it
             if (oldImageUrl) {
-                const { cleanupImage } = require('../utils/imageCleanup');
                 await cleanupImage(oldImageUrl);
             }
             return cached;
@@ -246,7 +245,6 @@ const processImage = async (buffer, options = {}) => {
 
     // 9. Clean up old image if provided
     if (oldImageUrl) {
-        const { cleanupImage } = require('../utils/imageCleanup');
         await cleanupImage(oldImageUrl);
     }
 

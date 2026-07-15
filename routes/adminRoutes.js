@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const validate = require('../middleware/validate');
 const { upload, processImage, uploadErrorHandler } = require('../middleware/advancedUpload');
-const { middleware } = require('../middleware/errorLoggerMiddleware');
+
 const authorize = require('../middleware/authorize');
 const verifyJWT = require('../middleware/verifyJWT');
 const loadUser = require('../middleware/loadUser');

@@ -25,7 +25,7 @@ const login = asyncHandler(async (req, res) => {
     if (!isPasswordValid) {
         throw new AppError('Invalid password', 401, 5);
     }
-    const token = jwt.sign({ id: admin._id, role: 'ADMIN' }, process.env.JWT_SECRET, { expiresIn: '15m' });
+    const token = jwt.sign({ id: admin._id, role: 'ADMIN', type: 'access' }, process.env.JWT_SECRET, { expiresIn: '15m' });
     return res.status(200).json({ success: true, message: 'Admin logged in successfully', data: { admin, token } });
 });
 
