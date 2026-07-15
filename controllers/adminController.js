@@ -10,6 +10,7 @@ const Campaindonation = require('../models/campaindonation');
 const Admin = require('../models/admin');
 const asyncHandler = require('../utils/asyncHandler');
 const AppError = require('../utils/AppError');
+const { cleanupImage } = require('../utils/imageCleanup');
 
 const login = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
