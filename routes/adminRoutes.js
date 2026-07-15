@@ -45,7 +45,7 @@ router.get('/getAllUsers', protect, authorize('ADMIN'), auditLog('Access Users L
 //========================
 router.get('/all', protect, authorize('ADMIN'), auditLog('Get all organizors by admin'), getAllorganizors);
 router.get('/getOrganizor/:id', protect, authorize('ADMIN'), auditLog('Access organizor'), getOrganizor);
-router.put('/updateOrganizor/:id', protect, authorize('ADMIN'), auditLog('Update organizor'), updateOrganizor);
+router.put('/updateOrganizor/:id', protect, authorize('ADMIN'), upload.single('image'), processImage, uploadErrorHandler, auditLog('Update organizor'), updateOrganizor);
 router.delete('/deleteOrganizor/:id', protect, authorize('ADMIN'), auditLog('Delete organizor'), deleteOrganizor);
 router.get('/getAllApprovedorganizors', protect, authorize('ADMIN'), auditLog('Get all approved organizors by admin'), getAllApprovedorganizors);
 router.get('/getAllRejectedorganizors', protect, authorize('ADMIN'), auditLog('Get all rejected organizors by admin'), getAllRejectedorganizors);
