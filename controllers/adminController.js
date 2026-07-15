@@ -102,6 +102,15 @@ const getDonor = asyncHandler(async (req, res) => {
 
 const updateDonor = asyncHandler(async (req, res) => {
     const { id } = req.params;
+
+    if (req.uploadedFile) {
+        const existing = await Donator.findById(id);
+        if (existing?.photo) {
+            await cleanupImage(existing.photo);
+        }
+        req.body.photo = req.uploadedFile.url;
+    }
+
     const donator = await Donator.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
     if (!donator) {
         throw new AppError('Donor not found', 404, 4);
