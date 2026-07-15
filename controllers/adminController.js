@@ -128,10 +128,14 @@ const updateDonor = asyncHandler(async (req, res) => {
 
 const deleteDonor = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const donator = await Donator.findByIdAndDelete(id);
+    const donator = await Donator.findById(id);
     if (!donator) {
         throw new AppError('Donor not found', 404, 4);
     }
+    if (donator.photo) {
+        await cleanupImage(donator.photo);
+    }
+    await Donator.findByIdAndDelete(id);
     return res.status(200).json({
         success: true,
         message: 'Donor deleted successfully',
