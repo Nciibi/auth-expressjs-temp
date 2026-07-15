@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs');
-const pendingRegistrations = require('./registrationStore');
+const registrationStore = require('./registrationStore');
 const { sendVerificationEmail } = require('../services/emailService');
 
 const generateVerificationCode = () => Math.floor(100000 + Math.random() * 900000).toString();
@@ -12,11 +12,11 @@ const handleRegistration = async (email, registrationData) => {
         const verificationData = {
             ...registrationData,
             verificationCode: hashedVerificationCode,
-            verificationExpires: Date.now() + 10 * 60 * 1000, // 10 minutes
+            verificationExpires: Date.now() + 10 * 60 * 1000,
             createdAt: new Date()
         };
 
-        pendingRegistrations.set(email, verificationData);
+        await registrationStore.set(email, verificationData);
         await sendVerificationEmail(email, verificationCode);
 
         return {
@@ -30,16 +30,15 @@ const handleRegistration = async (email, registrationData) => {
     }
 };
 
-// Renamed from verifyA2f to be more generic in the template context
 const verifyA2f = async (email, code) => {
     try {
-        const registrationData = pendingRegistrations.get(email);
+        const registrationData = await registrationStore.get(email);
         if (!registrationData) {
             return { success: false, message: 'Registration data not found or expired' };
         }
 
         if (registrationData.verificationExpires < Date.now()) {
-            pendingRegistrations.delete(email);
+            await registrationStore.delete(email);
             return { success: false, message: 'Verification code expired' };
         }
 
@@ -49,7 +48,7 @@ const verifyA2f = async (email, code) => {
         }
 
         const { verificationCode, verificationExpires, ...cleanData } = registrationData;
-        pendingRegistrations.delete(email);
+        await registrationStore.delete(email);
 
         return {
             success: true,
@@ -64,7 +63,7 @@ const verifyA2f = async (email, code) => {
 
 const handleResendVerification = async (email) => {
     try {
-        const registrationData = pendingRegistrations.get(email);
+        const registrationData = await registrationStore.get(email);
         if (!registrationData) {
             return { success: false, message: 'Registration data not found or expired' };
         }
@@ -78,7 +77,7 @@ const handleResendVerification = async (email) => {
             verificationExpires: Date.now() + 10 * 60 * 1000
         };
 
-        pendingRegistrations.set(email, updatedData);
+        await registrationStore.set(email, updatedData);
         await sendVerificationEmail(email, verificationCode);
 
         return { success: true, message: 'New verification code sent successfully' };
@@ -90,7 +89,6 @@ const handleResendVerification = async (email) => {
 
 module.exports = {
     handleRegistration,
-    verifyA2f, // Keeping name exported as-is so authController doesn't break
+    verifyA2f,
     handleResendVerification,
-    pendingRegistrations
 };
