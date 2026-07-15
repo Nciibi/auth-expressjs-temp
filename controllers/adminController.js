@@ -54,6 +54,15 @@ const getOrganizor = asyncHandler(async (req, res) => {
 
 const updateOrganizor = asyncHandler(async (req, res) => {
     const { id } = req.params;
+
+    if (req.uploadedFile) {
+        const existing = await Organizer.findById(id);
+        if (existing?.photo) {
+            await cleanupImage(existing.photo);
+        }
+        req.body.photo = req.uploadedFile.url;
+    }
+
     const organizer = await Organizer.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
     if (!organizer) {
         throw new AppError('Organizer not found', 404, 4);
